@@ -76,21 +76,21 @@
         document.getElementById(volume_label_id[i]).innerHTML = 'Volume:  ' + vol + 'dB'; 
     }
     var kick = new XMLHttpRequest();
-    kick.open("Get","test.wav",true);   //  <---- replace this file with yours
+    kick.open("Get","kick.wav",true);   //  <---- replace this file with yours
     kick.responseType = "arraybuffer";
     kick.onload = function(){
         context.decodeAudioData(kick.response, function(buffer){buffers[0] = buffer;});
     }
     kick.send();
     var snare = new XMLHttpRequest();
-    snare.open("Get","test.wav",true);  //  <---- replace this file with yours
+    snare.open("Get","snare.wav",true);  //  <---- replace this file with yours
     snare.responseType = "arraybuffer";
     snare.onload = function(){
         context.decodeAudioData(snare.response, function(buffer){buffers[1] = buffer;});
     }
     snare.send();
     var hihat = new XMLHttpRequest();
-    hihat.open("Get","test.wav",true);  //  <---- replace this file with yours
+    hihat.open("Get","hat.wav",true);  //  <---- replace this file with yours
     hihat.responseType = "arraybuffer";
     hihat.onload = function(){
         context.decodeAudioData(hihat.response, function(buffer){buffers[2] = buffer;});
@@ -105,6 +105,11 @@
         }, false);
     }
     function playdrum(i) {
+        var source;
+        source = context.createBufferSource();
+        source.buffer = buffers[i];
+	    source.connect(context.destination);
+	    source.start();
         //
         //
         // fill out this funciton
