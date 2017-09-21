@@ -45,7 +45,7 @@
 
 <body>
 
-<h1> Homework#1: Beatbox </h1>
+<h1> Homework#1: Beatbox - 20130181 김찬수 ver.3</h1>
 <br>
 <div id = "kick" align = "center">
     <button id="kickPad" onmousedown="playdrum(0)" > Kick ('a' key)</button>
@@ -111,7 +111,8 @@
         var source;
         source = context.createBufferSource();
         source.buffer = buffers[i];
-	    source.connect(context.destination);
+        source.connect(gain_nodes[i])
+	    gain_nodes[i].connect(context.destination);
 	    source.start();
         //
         //
@@ -125,7 +126,7 @@
         //
         //
         // fill out this funciton
-        gain = 10 ** (db_gain / 20.0)
+        gain = Math.pow(10, (db_gain / 20.0))
         //
         //
         return gain
