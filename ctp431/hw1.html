@@ -50,10 +50,10 @@
 
 <body>
 
-<h1> Homework#1: Beatbox - 20130181 김찬수 ver.3</h1>
+<h1> Homework#1: Beatbox - 20130181 김찬수</h1>
 <br>
 <div id = "kick" align = "center">
-    <button id="kickPad" onmousedown="playdrum(0)" > Kick ('a' key)</button>
+    <button id="kickPad" onmousedown="onPadDown(0)" onmouseup="onPadUp(0)" > Kick ('a' key)</button>
     <p id="kickVolLabel"></p>
     <input class="volume" onchange="changegain(0,this.value)" id="kickVol" title="Kick volume" type="range" min="-24" max ="0" value = "-12">
     <p></p>
@@ -62,7 +62,7 @@
     <input class="volume" onchange="changeloopgap(0,this.value)" id="kickLoopGap" title="Kick LoopGap" type="range" min="1" max="30" value="1">
 </div>
 <div id = "snare" align = "center">
-    <button id="snarePad" onmousedown="playdrum(1)" > Snare ('s' key)</button>
+    <button id="snarePad" onmousedown="onPadDown(1)" onmouseup="onPadUp(1)" > Snare ('s' key)</button>
     <p id="snareVolLabel"></p>
     <input class="volume" onchange="changegain(1,this.value)" id="snareVol" title="Snare volume" type="range" min="-24" max ="0" value = "-12">
     <p></p>
@@ -71,7 +71,7 @@
     <input class="volume" onchange="changeloopgap(1,this.value)" id="snareLoopGap" title="Snare LoopGap" type="range" min="1" max="30" value="1">
 </div>
 <div id = "hihat" align = "center">
-    <button id="hihatPad" onmousedown="playdrum(2)"> Hihat ('l' key)</button>
+    <button id="hihatPad" onmousedown="onPadDown(2)" onmouseup="onPadUp(2)"> Hihat ('l' key)</button>
     <p id="hihatVolLabel"></p>
     <input class="volume" onchange="changegain(2,this.value)" id="hihatVol" title="Hihat volume" type="range" min="-24" max ="0" value = "-12">
     <p></p>
@@ -80,7 +80,7 @@
     <input class="volume" onchange="changeloopgap(2,this.value)" id="hihatLoopGap" title="Hihat LoopGap" type="range" min="1" max="30" value="1">
 </div>
 <div id = "openhat" align = "center">
-    <button id="openhatPad" onmousedown="playdrum(3)"> Open Hihat ('k' key)</button>
+    <button id="openhatPad" onmousedown="onPadDown(3)" onmouseup="onPadUp(3)"> Open Hihat ('k' key)</button>
     <p id="openhatVolLabel"></p>
     <input class="volume" onchange="changegain(3,this.value)" id="openhatVol" title="Open Hihat volume" type="range" min="-24" max ="0" value = "-12">
     <p></p>
@@ -94,6 +94,7 @@
     var buffers = new Array(4); // 0 : kick, 1 : snare, 2 : hihat, 3: openhat
     var volume_id = new Array("kickVol","snareVol","hihatVol","openhatVol");
     var volume_label_id = new Array("kickVolLabel","snareVolLabel","hihatVolLabel","openhatVolLabel");
+
     var islooping = new Array(false, false, false, false);
     var loop_id = new Array("kickLoop", "snareLoop", "hihatLoop", "openhatLoop");
     var loopgap_id = new Array("kickLoopGap", "snareLoopGap", "hihatLoopGap", "openhatLoopGap");
@@ -171,8 +172,7 @@
     function startLoop(i){
         if (islooping[i] == true)
         {
-            var kickpad = document.getElementById(pad_id[i]);
-            simulateClick(kickpad);
+            playdrum(i);
             var loopgap = document.getElementById(loopgap_id[i]).value;
             var temp = setTimeout(function() {
                 startLoop(i);
@@ -185,119 +185,65 @@
         var pad = document.getElementById(pad_id[i]);
         pad.className = 'active';
         var loop = document.getElementById(loop_id[i]);
-        
+        if (loop.checked == true && islooping[i] == false)
+        {
+            islooping[i] = true;
+            startLoop(i);
+        }
+        else if (islooping[i] == true)
+        {
+            pad.className = '';
+            islooping[i] = false;
+        }
+        else if (loop.checked == false)
+        {
+            playdrum(i);
+        }
+    }
+
+    function onPadUp(i)
+    {
+        if (islooping[i] == false)
+        {
+            var pad = document.getElementById(pad_id[i]); 
+            pad.className = '';
+        }
     }
 
     // keyboard mapping 
     function keyboardDown(key) {
         switch (key.keyCode) {
             case 65: //'a'
-                var kickpad = document.getElementById("kickPad"); 
-                kickpad.className = 'active';
-                var kickloop = document.getElementById("kickLoop");
-                if (kickloop.checked == true && islooping[0] == false)
-                {
-                    islooping[0] = true;
-                    startLoop(0);
-                }
-                else if (islooping[0] == true)
-                {
-                    kickpad.className = '';
-                    islooping[0] = false;
-                }
-                else if (kickloop.checked == false)
-                {
-                    simulateClick(kickpad);
-                }
+                var kickpad = document.getElementById("kickPad");
+                simulateClick(kickpad);
                 break;
             case 83: //'s'
-                var snarepad = document.getElementById("snarePad"); 
-                snarepad.className = 'active';
-                var snareloop = document.getElementById("snareLoop");
-                if (snareloop.checked == true && islooping[1] == false)
-                {
-                    islooping[1] = true;
-                    startLoop(1);
-                }
-                else if (islooping[1] == true)
-                {
-                    snarepad.className = '';
-                    islooping[1] = false;
-                }
-                else if (snareloop.checked == false)
-                {
-                    simulateClick(snarepad);
-                }
+                var snarepad = document.getElementById("snarePad");
+                simulateClick(snarepad);
                 break;
             case 76: //'l'
                 var hihatpad = document.getElementById("hihatPad"); 
-                hihatpad.className = 'active';
-                var hihatloop = document.getElementById("hihatLoop");
-                if (hihatloop.checked == true && islooping[2] == false)
-                {
-                    islooping[2] = true;
-                    startLoop(2);
-                }
-                else if (islooping[2] == true)
-                {
-                    hihatpad.className = '';
-                    islooping[2] = false;
-                }
-                else if (hihatloop.checked == false)
-                {
-                    simulateClick(hihatpad);
-                }
+                simulateClick(hihatpad);
                 break;
             case 75: //'k'
                 var openhatpad = document.getElementById("openhatPad"); 
-                openhatpad.className = 'active';
-                var openhatloop = document.getElementById("openhatLoop");
-                if (openhatloop.checked == true && islooping[3] == false)
-                {
-                    islooping[3] = true;
-                    startLoop(3);
-                }
-                else if (islooping[3] == true)
-                {
-                    openhatpad.className = '';
-                    islooping[3] = false;
-                }
-                else if (openhatloop.checked == false)
-                {
-                    simulateClick(openhatpad);
-                }
+                simulateClick(openhatpad);
                 break;
         }
     }
     function keyboardUp(key) {
         switch (key.keyCode) {
             case 65: //'a'
-                if (islooping[0] == false)
-                {
-                    var kickpad = document.getElementById("kickPad"); 
-                    kickpad.className = '';
-                }
+                onPadUp(0);
                 break;
             case 83: //'s'
-                if (islooping[1] == false)
-                {
-                    var snarepad = document.getElementById("snarePad"); 
-                    snarepad.className = '';
-                }
+                onPadUp(1);
                 break;
             case 76: //'l'
-                if (islooping[2] == false)
-                {
-                    var hihatpad = document.getElementById("hihatPad"); 
-                    hihatpad.className = '';
-                }
+                onPadUp(2);
                 break;
             case 75: //'k'
-                if (islooping[3] == false)
-                {
-                    var openhatpad = document.getElementById("openhatPad"); 
-                    openhatpad.className = '';
-                }
+                onPadUp(3);
                 break;
         }
     }
