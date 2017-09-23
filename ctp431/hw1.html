@@ -37,6 +37,11 @@
         height:600px;
         float:left;
     }
+    #openhat{
+        width:130px;
+        height:600px;
+        float:left;
+    }
     input.volume {
         width:120px;
         height:10px;
@@ -62,14 +67,19 @@
     <p id="hihatVolLabel"></p>
     <input class="volume" onchange="changegain(2,this.value)" id="hihatVol" title="Hihat volume" type="range" min="-24" max ="0" value = "-12">
 </div>
+<div id = "openhat" align = "center">
+    <button id="openhatPad" onmousedown="playdrum(3)"> Open Hihat ('k' key)</button>
+    <p id="openhatVolLabel"></p>
+    <input class="volume" onchange="changegain(3,this.value)" id="openhatVol" title="Open Hihat volume" type="range" min="-24" max ="0" value = "-12">
+</div>
 
 <script>
     var context = new (window.AudioContext || window.webkitAudioContext)();
-    var buffers = new Array(3); // 0 : kick, 1 : snare, 2 : hihat
-    var volume_id = new Array("kickVol","snareVol","hihatVol");
-    var volume_label_id = new Array("kickVolLabel","snareVolLabel","hihatVolLabel");
-    var gain_nodes = new Array(3);
-    for (i  = 0; i < 3; i++) {
+    var buffers = new Array(4); // 0 : kick, 1 : snare, 2 : hihat, 3: openhat
+    var volume_id = new Array("kickVol","snareVol","hihatVol","openhatVol");
+    var volume_label_id = new Array("kickVolLabel","snareVolLabel","hihatVolLabel","openhatVolLabel");
+    var gain_nodes = new Array(4);
+    for (i  = 0; i < 4; i++) {
         gain_nodes[i] = context.createGain();
         var vol = document.getElementById(volume_id[i]).value;
         gain_nodes[i].gain.value = db2gain(vol);
@@ -96,6 +106,13 @@
         context.decodeAudioData(hihat.response, function(buffer){buffers[2] = buffer;});
     }
     hihat.send();
+    var openhat = new XMLHttpRequest();
+    openhat.open("Get","hw1_openhat.wav",true);  //  <---- replace this file with yours
+    openhat.responseType = "arraybuffer";
+    openhat.onload = function(){
+        context.decodeAudioData(openhat.response, function(buffer){buffers[3] = buffer;});
+    }
+    openhat.send();
     window.onload=function(){
         window.addEventListener('keydown', function (key) {
             keyboardDown(key);
@@ -105,16 +122,13 @@
         }, false);
     }
     function playdrum(i) {
-        //
-        //
         // fill out this funciton
         var source;
         source = context.createBufferSource();
         source.buffer = buffers[i];
         source.connect(gain_nodes[i]);
-	    gain_nodes[i].connect(context.destination);
-	    source.start();
-        //
+        gain_nodes[i].connect(context.destination);
+        source.start();
         //
     }
     function changegain(i,changedvalue){
@@ -123,11 +137,8 @@
     }
     function db2gain(db_gain) {
         var gain = 1.0;
-        //
-        //
         // fill out this funciton
         gain = Math.pow(10, (db_gain / 20.0))
-        //
         //
         return gain
     }
@@ -149,6 +160,11 @@
                 hihatpad.className = 'active';
                 simulateClick(hihatpad);
                 break;
+            case 75: //'k'
+                var openhatpad = document.getElementById("openhatpad"); 
+                openhatpad.className = 'active';
+                simulateClick(openhatpad);
+                break;
         }
     }
     function keyboardUp(key) {
@@ -164,6 +180,10 @@
             case 76: //'l'
                 var hihatpad = document.getElementById("hihatPad"); 
                 hihatpad.className = '';
+                break;
+            case 75: //'k'
+                var openhatpad = document.getElementById("openhatpad"); 
+                openhatpad.className = '';
                 break;
         }
     }
