@@ -72,7 +72,7 @@ function draw() {
         }
     }
 
-    
+    nostroke();
     fill(0,255,0); // spectrum is green
     for (var i = 0; i< octaveEnergy.length; i++){
         var x = map(i, 0, octaveEnergy.length, (width/2), width);
