@@ -10,7 +10,7 @@ function setup() {
   
 function draw() {
 
-    background(0);
+    background('#ffffff');
     
     var spectrum = fft.analyze();
     noStroke();
@@ -47,13 +47,21 @@ function draw() {
     var div_color_G = 1;
     var div_color_B = 0;
 
+    //var rainbow = ["#ff0000", "#ff8000", "#ffff00", "#80ff00", "#00ff00", "#00ff80", "#00ffff", "#0080ff", "#0000ff", "#8000ff", "#ff00ff", "#ff0080"];
+
+    var r = [255, 255, 255, 128, 0, 0, 0, 0, 0, 128, 255, 255];
+    var g = [0, 128, 255, 255, 255, 255, 255, 128, 0, 0, 0, 0];
+    var b = [0, 0, 0, 0, 0, 128, 255, 255, 255, 255, 255, 128];
+
+
+    stroke(0, 0, 0);
     for (var i = 0; i< 12; i++)
     {
         var before_h_end = height;
         var before_h_len = 0;
         for (var j = i; j < octaveEnergy.length; j+=12)
         {
-            fill(0, init_color_G - j*div_color_G, init_color_B + i*div_color_B);
+            fill(r[i], g[i], b[i]);
 
             var x = map(i, 0, 12, 0, (width / 2));
             var after_h_len = map(octaveEnergy[i], 0, 255, 0, parseInt(height/loops));
