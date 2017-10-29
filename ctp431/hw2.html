@@ -6,8 +6,26 @@
         <script src="../ctp431/p5/p5.min.js"></script>
         <script src="../ctp431/p5/addons/p5.dom.min.js"></script>
         <script src="../ctp431/p5/addons/p5.sound.min.js"></script>
-        <script src="../ctp431/hw2/sketch.js"></script>
+        <script src="../ctp431/hw2/sketch.js?ver=26"></script>
     </head>
+
+    <style>
+            button {
+                padding: 5px;
+                background: rgb(200, 200, 200);
+                border: 1px solid rgb(122, 122, 122);
+                border-radius: 2px;
+                outline: none;
+                width:120px;
+                height:120px;
+                font-size:15px
+            }
+    </style>
+
+
     <body>
+        <div id = "button" align = "left">
+            <button id="playing" onmousedown="onPlayingClicked()"> Playing </button>
+        </div>
     </body>
 </html>
