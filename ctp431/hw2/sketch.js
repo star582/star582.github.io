@@ -1,13 +1,13 @@
 function preload()
 {
-    sound = loadSound('Colourful.mp3');
+    sound = loadSound('../hw2/Colourful.mp3');
 }
 
 
 function setup() {
-    createCanvas(640, 480);    
+    var cnv = createCanvas(640, 480);    
     fft = new p5.FFT();
-    sound.loop();
+    cnv.mouseClicked(togglePlay);
 }
   
 function draw() {
@@ -45,6 +45,15 @@ function draw() {
     endShape();
 }
 
+function togglePlay() {
+    if (sound.isPlaying()) 
+    {
+        sound.pause();
+    }
+    else {
+        sound.loop();
+    }
+}
 
 
 /*
