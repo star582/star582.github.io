@@ -1,3 +1,31 @@
+var sound;
+
+var ParticleList = [];
+var lastDrawTime = 0;
+
+var drawInterval = 200;
+var bufferSize = 32;
+
+var Particle_v = -2.0;
+var accel_factor = 80;
+
+function Particle (x, y, v_x, v_y, a_x, a_y)
+{
+    this.x = x;
+    this.y = y;
+    this.v_x = v_x;
+    this.v_y = v_y;
+    this.a_x = a_x;
+    this.a_y = a_y;
+}
+Particle.prototype.setColor = function(r, g, b, a)
+{
+    this.c_r = r;
+    this.c_g = g;
+    this.c_b = b;
+    this.c_a = a;
+}
+
 function preload()
 {
     sound = loadSound('/ctp431/hw2/Colorful.mp3');
@@ -7,87 +35,129 @@ function setup() {
     var cnv = createCanvas(640, 480);    
     fft = new p5.FFT();
 }
-  
-function draw() {
 
-    background('#ffffff');
-    
-    var spectrum = fft.analyze();
-    noStroke();
+function draw() 
+{
+    if (!sound.isPlaying) return;
 
-    
-    fill(0,255,0); // spectrum is green
-    /*
-    for (var i = 0; i< spectrum.length; i++){
-        var x = map(i, 0, spectrum.length, 0, width);
-        var h = -height + map(spectrum[i], 0, 255, height, 0);
-        rect(x, height, width / spectrum.length, h )
-    }
-    */
-
-    /*
-    * @method map
-    * @param  {Number} value  the incoming value to be converted
-    * @param  {Number} start1 lower bound of the value's current range
-    * @param  {Number} stop1  upper bound of the value's current range
-    * @param  {Number} start2 lower bound of the value's target range
-    * @param  {Number} stop2  upper bound of the value's target range
-    * @param  {Boolean} [withinBounds] constrain the value to the newly mapped range
-    * @return {Number}        remapped number
-    * @example
-    */
-    
-    var octaveBands = fft.getOctaveBands(12);
-    var octaveEnergy = fft.logAverages(octaveBands);
-
-    var loops = parseInt(octaveEnergy.length / 12) + 1;
-    
-    var init_color_G = 255;
-    var init_color_B = 0;
-    var div_color_G = 1;
-    var div_color_B = 0;
-
-    //var rainbow = ["#ff0000", "#ff8000", "#ffff00", "#80ff00", "#00ff00", "#00ff80", "#00ffff", "#0080ff", "#0000ff", "#8000ff", "#ff00ff", "#ff0080"];
-
-    var r = [255, 255, 255, 128, 0, 0, 0, 0, 0, 128, 255, 255];
-    var g = [0, 128, 255, 255, 255, 255, 255, 128, 0, 0, 0, 0];
-    var b = [0, 0, 0, 0, 0, 128, 255, 255, 255, 255, 255, 128];
-
-
-    stroke(0, 0, 0);
-    for (var i = 0; i< 12; i++)
+    var currentDate = new Date();
+    var currentTime = currentDate.getTime();
+    if (lastDrawTime == 0)
     {
-        var before_h_end = height;
-        var before_h_len = 0;
-        for (var j = i; j < octaveEnergy.length; j+=12)
+        lastDrawTime = currentTime;
+    }
+
+    if (currentTime >= (lastDrawTime + drawInterval))
+    {
+        var spectrum = fft.analyze(bufferSize);
+    
+        var r = [255, 255, 255, 128, 0, 0, 0, 0, 0, 128, 255, 255];
+        var g = [0, 128, 255, 255, 255, 255, 255, 128, 0, 0, 0, 0];
+        var b = [0, 0, 0, 0, 0, 128, 255, 255, 255, 255, 255, 128];
+
+        noStroke();
+        for (var i = 0; i< bufferSize; i++)
         {
-            fill(r[i], g[i], b[i]);
+            var r_r, r_g, r_b;
+            if (i < parseInt(1 * bufferSize/6))
+            {
+                r_r = 255;
+                r_g = map(i, 0, 43, 0, 255);
+                r_b = 0;
+            }
+            else if (i < parseInt(2 * bufferSize/6))
+            {
+                r_r = map(i, 43, 85, 255, 0);
+                r_g = 255;
+                r_b = 0;
+            }
+            else if (i < parseInt(3 * bufferSize/6))
+            {
+                r_r = 0;
+                r_g = 255;
+                r_b = map(i, 85, 128, 0, 255);
+            }
+            else if (i < parseInt(4 * bufferSize/6))
+            {
+                r_r = 0;
+                r_g = map(i, 128, 170, 255, 0);
+                r_b = 255;
+            }
+            else if (i < parseInt(5 * bufferSize/6))
+            {
+                r_r = map(i, 170, 213, 0, 255);
+                r_g = 0;
+                r_b = 255;
+            }
+            else
+            {
+                r_r = 255;
+                r_g = 0;
+                r_b = map(i, 213, 255, 255, 0);
+            }
+            
+            var r_a = map (spectrum[i]*spectrum[i], 0, 65025, 0, 255);
 
-            var x = map(i, 0, 12, 0, (width / 2));
-            var after_h_len = map(octaveEnergy[i], 0, 255, 0, parseInt(height/loops));
-            var after_h_end = before_h_end - after_h_len;
+            var theta = map(i, 0, bufferSize, 0, Math.PI * 2);
+            var init_v_x = 0;
+            var init_v_y = Particle_v;
+            var final_v_x = init_v_x * cos(theta) - init_v_y * sin(theta);
+            var final_v_y = init_v_x * sin(theta) + init_v_y * cos(theta);
+            var pos_x = parseInt(width/2) + 10 * final_v_x;
+            var pos_y = parseInt(height/2) + 10 * final_v_y;
 
-            rect(x, before_h_end, width / 24, before_h_end - after_h_end);
-            before_h_end = after_h_end;
+            var particle = new Particle(pos_x, pos_y, final_v_x, final_v_y, (final_v_x/accel_factor), (final_v_y/accel_factor));
+            particle.setColor(r_r, r_g, r_b, r_a);
+
+            ParticleList.push(particle);
         }
+
+        lastDrawTime = currentTime;
     }
 
-    nostroke();
-    fill(0,255,0); // spectrum is green
-    for (var i = 0; i< octaveEnergy.length; i++){
-        var x = map(i, 0, octaveEnergy.length, (width/2), width);
-        var h = -height + map(octaveEnergy[i], 0, 255, height, 0);
-        rect(x, height, width/octaveEnergy.length, h );
+    background(0);
+    var i = ParticleList.length;
+    while (i--)
+    {
+        var tmpPtc = ParticleList[i];
+        tmpPtc.x = tmpPtc.x + tmpPtc.v_x;
+        tmpPtc.y = tmpPtc.y + tmpPtc.v_y;
+
+        tmpPtc.v_x = tmpPtc.v_x + tmpPtc.a_x;
+        tmpPtc.v_y = tmpPtc.v_y + tmpPtc.a_y;
+
+        if ((tmpPtc.x + 5) < 0
+            || (tmpPtc.x - 5) > width
+            || (tmpPtc.y + 5) < 0
+            || (tmpPtc.y - 5) > height)
+        {
+            ParticleList.splice(i, 1);
+            continue;
+        }
+        
+        fill(tmpPtc.c_r, tmpPtc.c_g, tmpPtc.c_b, tmpPtc.c_a);
+        var size = map(tmpPtc.c_a, 0, 255, 0, 15);
+        ellipse(tmpPtc.x, tmpPtc.y, size, size);
     }
+
 }
+
 
 function onPlayingClicked()
 {
+    var filechoose = document.getElementById("fileChooseInput");
+    filechoose.src = URL.createObjectURL(filechoose.files[0]);
+    var data = filechoose.src;
+    
     if (sound.isPlaying()) 
     {
-        sound.pause();
+        sound.stop();
     }
     else {
+        sound.stop();
+        sound.setPath(data);
         sound.loop();
     }
 }
+
+
