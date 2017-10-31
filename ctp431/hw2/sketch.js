@@ -1,4 +1,6 @@
+var sample_sound;
 var sound;
+var isPlaySample = true;
 
 var ParticleList = [];
 var lastDrawTime = 0;
@@ -28,11 +30,12 @@ Particle.prototype.setColor = function(r, g, b, a)
 
 function preload()
 {
-    sound = loadSound('/ctp431/hw2/Colorful.mp3');
+    sample_sound = loadSound('/ctp431/hw2/Colorful.mp3');
+    sound = sample_sound;
 }
 
 function setup() {
-    var cnv = createCanvas(640, 480);    
+    var cnv = createCanvas(800, 600);    
     fft = new p5.FFT();
 }
 
@@ -146,18 +149,50 @@ function draw()
 function onPlayingClicked()
 {
     var filechoose = document.getElementById("fileChooseInput");
-    filechoose.src = URL.createObjectURL(filechoose.files[0]);
-    var data = filechoose.src;
-    
-    if (sound.isPlaying()) 
+    if (filechoose.length == 0)
+    {
+        if (sound.isPlaying()) 
+        {
+            sound.stop();
+        }
+        return;
+    }
+    else
+    {
+        filechoose.src = URL.createObjectURL(filechoose.files[0]);
+        var data = filechoose.src;
+        
+        if (sample_sound.isPlaying())
+        {
+            sample_sound.stop();
+        }
+        else
+        {
+            if (sound.isPlaying()) 
+            {
+                sound.stop();
+            }
+            else {
+                sound.stop();
+                sound.setPath(data);
+                sound.loop();
+            }
+        }
+    }
+}
+
+function onSamplePlayingClicked()
+{
+    sample_sound.setPath('/ctp431/hw2/Colorful.mp3');
+    if (sound.isPlaying())
     {
         sound.stop();
     }
-    else {
-        sound.stop();
-        sound.setPath(data);
+    else
+    {
+        sound = sample_sound;
         sound.loop();
-    }
+    }    
 }
 
 
