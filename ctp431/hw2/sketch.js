@@ -30,7 +30,7 @@ Particle.prototype.setColor = function(r, g, b, a)
 
 function preload()
 {
-    sample_sound = loadSound('/ctp431/hw2/Colorful.mp3');
+    sample_sound = loadSound('/ctp431/hw2/pinknoise.wav');
     sound = sample_sound;
 }
 
@@ -183,7 +183,7 @@ function onPlayingClicked()
 
 function onSamplePlayingClicked()
 {
-    sample_sound.setPath('/ctp431/hw2/Colorful.mp3');
+    sample_sound.setPath('/ctp431/hw2/pinknoise.wav');
     if (sound.isPlaying())
     {
         sound.stop();
