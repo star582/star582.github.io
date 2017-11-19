@@ -49,4 +49,7 @@ Delay.prototype.updateParams = function (params, value) {
 	}
 }
 
-
+Delay.prototype.connect = function(node) {
+	this.wetGain.connect(node.input);
+	this.dryGain.connect(node.input);
+}
