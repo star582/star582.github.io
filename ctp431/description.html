@@ -3,29 +3,36 @@
 <body>
 <h1>Description of Final Project</h1>
 <h2>CTP431 20130181 Chansoo Kim</h2>
-<h3>1. Intro</h3>
+
+<a href="https://star582.github.io/ctp431/final.html"> Project link </a>
+
+<h3 style="padding-top:15px">1. Intro</h3>
 <p>It is the 'random-lauchpad pattern generator, by input a midi file.</p>
 <p>It use Tone.js, Tone.js.MidiConvert, and jquery external library. </p>
 <p>Tone.js is used to make synth sound, and Tone.js.Midiconvert is used to parse midi file.</p>
 
-<h3>2. Description</h3>
+<h3 style="padding-top:15px">2. Description</h3>
 <h4>1) Load a midi file </h4>
 <p>Load a midi file clicking drop-down field, or simple drop the file to the field. </p>
 <h4>2) Play</h4>
 <p>When 'Start' button is enbled, you can press button to play whole midi file. Launchpad will automatically pressed to make the sound.</p>
-<h4>3) Click pads</h4>
-<p>You can hear the sound of each pad by clicking the pad.</p>
+<h4>3) Track control</h4>
+<p>When you load a midi file complete, track-controllers are generates on the right side of Launchpad.</p>
+<p>You can change the track color of pads by input RGB color code on the text field.</p>
+<p>Also, you can choose volume, and synth type from the 4 presets.</p>
 
 
-<h3>3. Concepts and Technical things</h3>
-<p>The key concept of this project is 'Bind each tones technically, and show it beautifully.</p>
-<p>Basic simple method is binding every single 'tones' to the each pad of launchpad. </p>
-<p></p>
-
-<h3>3. References</h3>
-<p>Many major structure and designs are from those pages.</p>
+<h3 style="padding-top:15px">3. References</h3>
+<p>Many major structures and designs are from those pages.</p>
 <a href="https://github.com/Tonejs/MidiConvert">[Tonejs Midiconvert Example]</a>
+<div></div>
 <a href="https://codepen.io/peky/pen/LGyXLR">[Web audio API Novation Launchpad by Djordje Petrovic]</p></a>
+
+
+<h3 style="padding-top:15px">4. Notes</h3>
+<p>1) When you load a file once, you have to refresh the webpage to load other file.</p>
+<p>2) Monosynth, AMsynth, and FMsynth can't create chord sound (it can't generate multiple tones at same time)</p>
+<p style="padding-down:50px">3) When the playing sound is awkward, please refresh the site again.</p>
 
 </body>
 </html> 

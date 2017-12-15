@@ -169,15 +169,7 @@
 		button.active {
 			pointer-events: initial;
 			opacity: 1;
-        }
-        #SampleDesc {
-			position: absolute;
-			width: 100%;
-			height: 40px;
-			font-size: 20px;
-			bottom: 30px;
-            color: #5260D0;
-        }
+		}
 		#Description {
 			position: absolute;
 			width: 100%;
@@ -220,7 +212,6 @@
 		}
 	</style>
 	<div id="Description">Description Page</i></div>
-	<div id="SampleDesc">Sample Page</i></div>
 
     <button id="startBtn" class="button">START</button>
     
@@ -322,10 +313,6 @@
         var str = "Description Page";
         var result = str.link("https://star582.github.io/ctp431/description.html");
         document.getElementById("Description").innerHTML = result;
-        
-        var str = "Sample Page";
-        var result = str.link("https://star582.github.io/ctp431/final_sample.html");
-        document.getElementById("SampleDesc").innerHTML = result;
 
         var track_num = 0;
         var track_color_array = [];
@@ -493,41 +480,9 @@
 			}
         });
         
+        document.querySelector("#FileDrop #Text").textContent = "Sample mid"
 
-		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
-			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
-		} else {
-
-			var fileDrop = document.querySelector("#FileDrop")
-
-			fileDrop.addEventListener("dragenter", function(){
-				fileDrop.classList.add("Hover");
-			})
-
-			fileDrop.addEventListener("dragleave", function(){
-				fileDrop.classList.remove("Hover");
-			});
-
-			fileDrop.addEventListener("drop", function(){
-				fileDrop.classList.remove("Hover");
-			});
-
-			document.querySelector("#FileDrop input").addEventListener("change", function(e){
-				//get the files
-				var files = e.target.files;
-				if (files.length > 0){
-					var file = files[0];
-					document.querySelector("#FileDrop #Text").textContent = file.name;
-					parseFile(file);
-				}
-			});
-		}
-		function parseFile(file){
-            var reader = new FileReader();
-            reader.onload = function(e){
-                var midi = MidiConvert.parse(e.target.result)
-
-                //MidiConvert.load("../ctp431/final/lngn.mid").then(function(midi){
+                MidiConvert.load("../ctp431/final/gym.mid").then(function(midi)
                 {
                     var track_num = 0;
                     note_array = [];
@@ -715,11 +670,7 @@
                     var rightHandPart = new Tone.Part(playNote, rightHand).start(0);
                     //var leftHandPart = new Tone.Part(playNote, leftHand).start(0);
                     button.classList.add("active")
-                }
-            }
-            reader.readAsBinaryString(file);
-        }
-
+                });
 
 
 	</script>
