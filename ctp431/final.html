@@ -28,6 +28,42 @@
         body h4 {
           color:#61636D;
         }
+
+        #tracks {            
+          float: left;
+          height: 600px;
+          width: 300px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-top: -230px;
+          margin-left: 350px;
+        }
+        .track {
+          background-color:#072474;
+          -moz-border-radius:.5em;
+          -webkit-border-radius:.5em;
+          -o-border-radius:.5em;
+          border-radius:.5em;
+          margin-left: 10px;
+          float:left;
+          padding:1em;
+          width: 250px;
+          height: 50px;
+          margin:.3125em;
+        }
+
+        .track_text {
+            text-align: left;
+            color: rgb(255, 255, 255);
+            float:left;
+        }
+        .colortext {
+            float:left;
+            text-align: center;
+            width: 150px;
+            margin-left: 10px;
+        }
         
         #lnpad {
           float: left;
@@ -230,6 +266,9 @@
         </div>
     </div>
     
+    <div id="tracks">
+
+    </div>
 
 
     <script type="text/javascript">
@@ -242,6 +281,18 @@
         var str = "Description Page";
         var result = str.link("https://star582.github.io/ctp431/description.html");
         document.getElementById("Description").innerHTML = result;
+
+        var track_num = 0;
+        var track_color_array = [];
+        track_color_array.push("#00c253");
+        track_color_array.push("#5260D0");
+        track_color_array.push("#00c253");
+        track_color_array.push("#5260D0");
+        track_color_array.push("#00c253");
+        track_color_array.push("#5260D0");
+        track_color_array.push("#00c253");
+        track_color_array.push("#5260D0");
+        
         
         var randomInt = [];
         for (i=0; i<64; i++)
@@ -310,6 +361,15 @@
             var button_color = $(this).data('color');
             $(this).effect("highlight",{color:button_color}, 160 );
         });
+        function changeColorTxt(event){
+            var txt = event.target.value;
+            var targetid = (event.target.id).split("track_color")[1];
+            event.target.style.backgroundColor = txt;
+            if (parseInt(targetid) != NaN)
+            {
+                track_color_array[parseInt(targetid)] = txt;
+            }
+        }
 
         function CheckHighlight()
         {
@@ -323,7 +383,8 @@
                 {
                     if (Math.abs(note_array[i][j].time - time) <= 0.05)
                     {
-                        var button_color = $(pads[randomInt[i]]).data('color');
+                        //var button_color = $(pads[randomInt[i]]).data('color');
+                        var button_color = track_color_array[note_array[i][j].track];
                         $(pads[randomInt[i]]).effect("highlight",{color:button_color}, note_array[i][j].duration * 1000.0);
                     }
                 }
@@ -381,13 +442,38 @@
 
                 //MidiConvert.load("../ctp431/final/lngn.mid").then(function(midi){
                 {
+                    var track_num = 0;
+                    note_array = [];
+                    note_idx = [];
                     var rightHand = [];
-                    // play right and left hand with a poly synth
                     for (i=0; i<midi.tracks.length; i++)
                     {
                         if (midi.tracks[i].notes.length > 0 )
                         {
-                            rightHand = rightHand.concat(midi.tracks[i].notes);
+                            track_num = track_num + 1;
+                            for (j=0; j<midi.tracks[i].notes.length; j++)
+                            {
+                                var tmp = midi.tracks[i].notes[j];
+                                tmp.track = track_num;
+                                rightHand.push(tmp);
+                            }
+                            
+                            var track_div = document.createElement("div");
+                            track_div.className = "track";
+                            track_div.id = "track" + track_num;
+                            var track_text = document.createElement("div");
+                            track_text.className = "track_text";
+                            track_text.innerText = "Track " + track_num;
+                            var track_colortxt = document.createElement("input");
+                            track_colortxt.className = "colortext";
+                            track_colortxt.id = "track_color" + track_num;
+                            track_colortxt.value = track_color_array[track_num];
+                            track_colortxt.style.backgroundColor = track_color_array[track_num];
+                            track_colortxt.addEventListener("change", changeColorTxt);
+                            
+                            track_div.appendChild(track_text);
+                            track_div.appendChild(track_colortxt);
+                            document.getElementById('tracks').appendChild(track_div);
                         }
                     }
 
@@ -405,12 +491,13 @@
                         }                
                         if (idx >= 0)
                         {
-                            var tmpArray = {};
-                            tmpArray.name = rightHand[i].name;
-                            tmpArray.time = rightHand[i].time;
-                            tmpArray.velocity = rightHand[i].velocity;
-                            tmpArray.duration = rightHand[i].duration;
-                            note_array[idx].push(tmpArray);
+                            var tmpDict = {};
+                            tmpDict.name = rightHand[i].name;
+                            tmpDict.time = rightHand[i].time;
+                            tmpDict.velocity = rightHand[i].velocity;
+                            tmpDict.duration = rightHand[i].duration;
+                            tmpDict.track = rightHand[i].track;
+                            note_array[idx].push(tmpDict);
                         }
                         else
                         {
@@ -421,6 +508,7 @@
                             tmpDict.time = rightHand[i].time;
                             tmpDict.velocity = rightHand[i].velocity;
                             tmpDict.duration = rightHand[i].duration;
+                            tmpDict.track = rightHand[i].track;
                             tmpArray.push(tmpDict);
                             note_array.push(tmpArray);
                         }
@@ -453,6 +541,7 @@
                     //{
                     for (i=0; i<note_array.length; i++)
                     {
+                        pad_sound[randomInt[i]] = [];
                         if (i>=64) break;
                         pad_sound[randomInt[i]].push(note_array[i][0].name);
                     }
