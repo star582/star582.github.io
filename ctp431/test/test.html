@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../jquery-ui-1.12.1/jquery-ui.min.css">
+    <script src="../jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+    <script src="../jquery-ui-1.12.1/jquery-ui.min.js"></script>      
+</head>
+<body>
+    <style type="text/css">
+        * {
+           -moz-box-sizing:border-box;
+           -webkit-box-sizing:border-box;
+            box-sizing:border-box;
+        }
+        
+        body {
+          background-color:#EFAA55;
+          color:#bbb;
+          font-family:Arial,sans-serif;
+          font-size:16px;
+          text-align:center;
+        }
+        
+        body h4 {
+          color:#61636D;
+        }
+        
+        #lnpad {
+          float: left;
+          height: 510px;
+          width: 565px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-top: -227px;
+          margin-left: -285px;
+        }
+        .circle_wrap {
+          position: relative;
+          margin-top: 35px;
+        }
+        .circle_wrap span {
+          position: absolute;
+          right: 8px;
+          top: 15px;
+          font-size: 13px;
+          color: #7D7E88;
+        }
+        .right_cont {
+          width: 70px;
+          height: 510px;
+          position: absolute;
+          right: 11px;
+        }
+        .circle {
+          border-radius: 50%;
+            width: 45px;
+            height: 45px;
+          background: #7D7E88;
+        }
+        #pads {
+          position:absolute;
+          width: 565px;
+          height: 520px;
+        }
+        .module {
+          background-color:#61636d;
+          -moz-border-radius:.5em;
+          -webkit-border-radius:.5em;
+          -o-border-radius:.5em;
+          border-radius:.5em;
+          padding:1.25em .9375em;
+        }
+        .pad {
+          background-color:#bbb;
+          -moz-border-radius:5px;
+          -webkit-border-radius:5px;
+          -o-border-radius:5px;
+          border-radius:5px;
+          cursor:pointer;
+          float:left;
+          width: 50px;
+          height: 50px;
+          margin:.3125em;
+        }
+	</style>
+
+
+    <h4>Use your keyboard to play</h4>
+    <div id="lnpad">
+        <div id="pads" class="module">
+            <div id="kick1" data-key="81" data-color="#ff0011" class="pad"> </div>
+            <div id="kick2" data-key="87" data-color="#ffda24" class="pad"> </div>
+            <div id="kick3" data-key="69" data-color="#00c253" class="pad"> </div>
+            <div id="clap1" data-key="82" data-color="#ffda24" class="pad"> </div>
+            <div id="clap2" data-key="84" data-color="#00c353" class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="clap3" data-key="65" data-color="#ffda24" class="pad"> </div>
+            <div id="bass1" data-key="83" data-color="#ffda24" class="pad"> </div>
+            <div id="bass2" data-key="68" data-color="#00c353" class="pad"> </div>
+            <div id="hoover1" data-key="70" data-color="#00c353" class="pad"> </div>
+            <div id="fx" data-key="71" data-color="#00c253" class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+            <div id="" data-key=""  class="pad"> </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // samples
+        var kick1 = new getSound("kick1","https://dl.dropboxusercontent.com/s/q9ffbq1esfufado/kick3.wav?dl=0");
+
+        var context = new AudioContext();
+
+        $(document).keydown(function(e) {
+            console.log(e.which);
+            $("[data-key='" + e.which + "']").trigger('click');
+        });
+        
+        function getSound(domNode,fileDirectory) {
+        this.domNode = domNode;
+        this.fileDirectory = fileDirectory;
+        var play = play;
+        var incomingBuffer;
+        var savedBuffer;
+        var xhr;
+        play = function () {
+            var source = context.createBufferSource();
+            source.buffer = savedBuffer;
+            source.connect(context.destination);
+            source.start(0);
+        };
+        var xhr = new XMLHttpRequest();
+        xhr.open('get',fileDirectory, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+        context.decodeAudioData(xhr.response,
+            function(incomingBuffer) {
+            savedBuffer = incomingBuffer;
+            var note = document.getElementById(domNode);
+            note.addEventListener("click", play , false);
+                }
+            );
+        };
+        xhr.send();
+        };
+
+        $(".pad").click(function () {
+            var button_color = $(this).data('color');
+            $(this).effect("highlight",{color:button_color}, 160 );
+        });
+    </script>
+
+</body>
+</html>
