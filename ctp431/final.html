@@ -110,11 +110,50 @@
 			bottom: 0px;
             color: #5260D0;
 		}
+        #FileDrop{
+			position: absolute;
+			width: 300px;
+			height: 50px;
+			margin-left: -150px;
+			border: 2px dashed black;
+			left: 50%;
+			margin-top: 70px;
+			color: black;
+		}
+
+		#FileDrop.Hover{
+			background-color: black;
+			color: white;
+		}
+		#FileDrop input {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			left: 0px;
+			top: 0px;
+		}
+		#FileDrop #Text {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			line-height: 50px;
+			left: 0px;
+			top: 0px;
+			text-align: center;
+		}
 	</style>
 	<div id="Description">Description Page</i></div>
 
-	<button id="startBtn">START</button>
-
+    <button id="startBtn">START</button>
+    
+    <div id="FileDrop">
+		<div id="Text">
+			Drop a midi file here
+		</div>
+		<input type="file" accept="audio/midi">
+    </div>
+    
     <div id="lnpad">
         <div id="pads" class="module">
             <div id="kick1" data-key="81" data-color="#ff0011" class="pad"> </div>
@@ -200,10 +239,26 @@
         var note_idx = [];
         var note_array = [];
 
-
         var str = "Description Page";
-        var result = str.link("https://star582.github.io/ctp431/discription.html");
+        var result = str.link("https://star582.github.io/ctp431/description.html");
         document.getElementById("Description").innerHTML = result;
+        
+        var randomInt = [];
+        for (i=0; i<64; i++)
+        {
+            randomInt.push(i);
+        }
+        function shuffle(a) {
+            var j, x, i;
+            for (i = a.length - 1; i > 0; i--) {
+                j = Math.floor(Math.random() * (i + 1));
+                x = a[i];
+                a[i] = a[j];
+                a[j] = x;
+            }
+        }
+        shuffle(randomInt);
+
 
 
         startHighlight = function() {
@@ -249,7 +304,7 @@
             {
                 for (i=0; i<pad_sound[sounds].length; i++)
                 {
-                    //synth.triggerAttackRelease(pad_sound[sounds][i], 0.3);
+                    synth.triggerAttackRelease(pad_sound[sounds][i], 0.3);
                 }
             }
             var button_color = $(this).data('color');
@@ -268,8 +323,8 @@
                 {
                     if (Math.abs(note_array[i][j].time - time) <= 0.05)
                     {
-                        var button_color = $(pads[i]).data('color');
-                        $(pads[i]).effect("highlight",{color:button_color}, note_array[i][j].duration * 1000.0);
+                        var button_color = $(pads[randomInt[i]]).data('color');
+                        $(pads[randomInt[i]]).effect("highlight",{color:button_color}, note_array[i][j].duration * 1000.0);
                     }
                 }
             }
@@ -288,102 +343,131 @@
                 startHighlight();
                 currentTime = new Date().getTime();
 			}
-		});
-		MidiConvert.load("../ctp431/final/lngn.mid").then(function(midi){
-            
-            var rightHand = [];
-            // play right and left hand with a poly synth
-            for (i=0; i<midi.tracks.length; i++)
-            {
-                if (midi.tracks[i].notes.length > 0 )
-                {
-                    rightHand = rightHand.concat(midi.tracks[i].notes);
-                }
-            }
-
-            var time_idx = [];
-            var time_array = [];
-            for (i=0; i<rightHand.length; i++)
-            {
-                var idx = -1;
-                for (j=0; j<note_idx.length; j++)
-                {
-                    if (note_idx[j] == rightHand[i].midi)
-                    {
-                        idx = j;
-                    }
-                }                
-                if (idx >= 0)
-                {
-                    var tmpArray = {};
-                    tmpArray.name = rightHand[i].name;
-                    tmpArray.time = rightHand[i].time;
-                    tmpArray.velocity = rightHand[i].velocity;
-                    tmpArray.duration = rightHand[i].duration;
-                    note_array[idx].push(tmpArray);
-                }
-                else
-                {
-                    note_idx.push(rightHand[i].midi);
-                    var tmpArray = []
-                    var tmpDict = {};
-                    tmpDict.name = rightHand[i].name;
-                    tmpDict.time = rightHand[i].time;
-                    tmpDict.velocity = rightHand[i].velocity;
-                    tmpDict.duration = rightHand[i].duration;
-                    tmpArray.push(tmpDict);
-                    note_array.push(tmpArray);
-                }
-            }
-            for (i=0; i<rightHand.length; i++)
-            {
-                var idx = -1;
-                for (j=0; j<time_idx.length; j++)
-                {
-                    if (time_idx[j] < (rightHand[i].time + 0.01)
-                        && time_idx[j] > (rightHand[i].time - 0.01))
-                    {
-                        idx = j;
-                    }
-                }
-                if (idx >= 0)
-                {
-                    time_array[idx].push(rightHand[i].midi);
-                }
-                else
-                {
-                    time_idx.push(rightHand[i].time);
-                    var emptyarray = [];
-                    emptyarray.push(rightHand[i].midi);
-                    time_array.push(emptyarray);
-                }
-            }
-
-            //if (note_array.length < 64)
-            //{
-                for (i=0; i<note_array.length; i++)
-                {
-                    if (i>=64) break;
-                    pad_sound[i].push(note_array[i][0].name);
-                }
-           // }
-
-			// make sure you set the tempo before you schedule the events
-			Tone.Transport.bpm.value = midi.bpm;
-			Tone.Transport.timeSignature = midi.timeSignature;
-			var rightHandPart = new Tone.Part(playNote, rightHand).start(0);
-			//var leftHandPart = new Tone.Part(playNote, leftHand).start(0);
-			button.classList.add("active")
         });
         
 
+		if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+			document.querySelector("#FileDrop #Text").textContent = "Reading files not supported by this browser";
+		} else {
 
+			var fileDrop = document.querySelector("#FileDrop")
 
+			fileDrop.addEventListener("dragenter", function(){
+				fileDrop.classList.add("Hover");
+			})
 
+			fileDrop.addEventListener("dragleave", function(){
+				fileDrop.classList.remove("Hover");
+			});
 
+			fileDrop.addEventListener("drop", function(){
+				fileDrop.classList.remove("Hover");
+			});
 
+			document.querySelector("#FileDrop input").addEventListener("change", function(e){
+				//get the files
+				var files = e.target.files;
+				if (files.length > 0){
+					var file = files[0];
+					document.querySelector("#FileDrop #Text").textContent = file.name;
+					parseFile(file);
+				}
+			});
+		}
+		function parseFile(file){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                var midi = MidiConvert.parse(e.target.result)
 
+                //MidiConvert.load("../ctp431/final/lngn.mid").then(function(midi){
+                {
+                    var rightHand = [];
+                    // play right and left hand with a poly synth
+                    for (i=0; i<midi.tracks.length; i++)
+                    {
+                        if (midi.tracks[i].notes.length > 0 )
+                        {
+                            rightHand = rightHand.concat(midi.tracks[i].notes);
+                        }
+                    }
 
+                    var time_idx = [];
+                    var time_array = [];
+                    for (i=0; i<rightHand.length; i++)
+                    {
+                        var idx = -1;
+                        for (j=0; j<note_idx.length; j++)
+                        {
+                            if (note_idx[j] == rightHand[i].midi)
+                            {
+                                idx = j;
+                            }
+                        }                
+                        if (idx >= 0)
+                        {
+                            var tmpArray = {};
+                            tmpArray.name = rightHand[i].name;
+                            tmpArray.time = rightHand[i].time;
+                            tmpArray.velocity = rightHand[i].velocity;
+                            tmpArray.duration = rightHand[i].duration;
+                            note_array[idx].push(tmpArray);
+                        }
+                        else
+                        {
+                            note_idx.push(rightHand[i].midi);
+                            var tmpArray = []
+                            var tmpDict = {};
+                            tmpDict.name = rightHand[i].name;
+                            tmpDict.time = rightHand[i].time;
+                            tmpDict.velocity = rightHand[i].velocity;
+                            tmpDict.duration = rightHand[i].duration;
+                            tmpArray.push(tmpDict);
+                            note_array.push(tmpArray);
+                        }
+                    }
+                    for (i=0; i<rightHand.length; i++)
+                    {
+                        var idx = -1;
+                        for (j=0; j<time_idx.length; j++)
+                        {
+                            if (time_idx[j] < (rightHand[i].time + 0.01)
+                                && time_idx[j] > (rightHand[i].time - 0.01))
+                            {
+                                idx = j;
+                            }
+                        }
+                        if (idx >= 0)
+                        {
+                            time_array[idx].push(rightHand[i].midi);
+                        }
+                        else
+                        {
+                            time_idx.push(rightHand[i].time);
+                            var emptyarray = [];
+                            emptyarray.push(rightHand[i].midi);
+                            time_array.push(emptyarray);
+                        }
+                    }
+
+                    //if (note_array.length < 64)
+                    //{
+                    for (i=0; i<note_array.length; i++)
+                    {
+                        if (i>=64) break;
+                        pad_sound[randomInt[i]].push(note_array[i][0].name);
+                    }
+                // }
+
+                    // make sure you set the tempo before you schedule the events
+                    Tone.Transport.bpm.value = midi.bpm;
+                    Tone.Transport.timeSignature = midi.timeSignature;
+                    var rightHandPart = new Tone.Part(playNote, rightHand).start(0);
+                    //var leftHandPart = new Tone.Part(playNote, leftHand).start(0);
+                    button.classList.add("active")
+                }
+            }
+            reader.readAsBinaryString(file);
+        }
 
 	</script>
 
