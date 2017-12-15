@@ -18,7 +18,7 @@
         }
         
         body {
-          background-color:#EFAA55;
+          background-color:#99DBe3;
           color:#bbb;
           font-family:Arial,sans-serif;
           font-size:16px;
@@ -108,9 +108,10 @@
 			height: 40px;
 			font-size: 20px;
 			bottom: 0px;
+            color: #5260D0;
 		}
 	</style>
-	<div id="Description">Load and parse Bach's <i>Prelude in C</i></div>
+	<div id="Description">Description Page</i></div>
 
 	<button id="startBtn">START</button>
 
@@ -197,7 +198,13 @@
         var currentTime = new Date().getTime();   
         
         var note_idx = [];
-        var note_array = [];     
+        var note_array = [];
+
+
+        var str = "Description Page";
+        var result = str.link("https://star582.github.io/ctp431/discription.html");
+        document.getElementById("Description").innerHTML = result;
+
 
         startHighlight = function() {
             playAlert = setInterval(CheckHighlight, 100);
@@ -282,7 +289,7 @@
                 currentTime = new Date().getTime();
 			}
 		});
-		MidiConvert.load("../ctp431/final/melt_uta.mid").then(function(midi){
+		MidiConvert.load("../ctp431/final/lngn.mid").then(function(midi){
             
             var rightHand = [];
             // play right and left hand with a poly synth
