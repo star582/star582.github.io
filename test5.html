@@ -5,10 +5,7 @@
     <title>Redirecting...</title>
     <script>
         var redirectToApp = function() {
-            setTimeout(function appNotInstalled() {
-                window.location.replace("https://google.com");
-            }, 1000);
-            window.location.replace("intent://sl.com?type=2&userUid=6i9ix19ql;#Intent;scheme=smash;package=com.linegames.sl;end");
+            window.location = smash://sl.com?type=2&userUid=6i9ix19ql;
         };
         window.onload = redirectToApp;
     </script>
